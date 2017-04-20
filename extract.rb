@@ -32,6 +32,8 @@ end
 if errors.first
   puts errors.first.message
   puts errors.first.backtrace.join("\n")
+else
+  puts "No errors"
 end
 
 EXTRACT.shutdown
