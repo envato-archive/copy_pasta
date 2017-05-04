@@ -1,15 +1,45 @@
+GIT
+  remote: git@github.com:atoulme/minitar.git
+  revision: cc7a41ed911efbfccad11c5e500b360d99371d44
+  specs:
+    minitar (0.5.4)
+
+PATH
+  remote: .
+  specs:
+    unthread (0.1.0)
+      concurrent-ruby
+      minitar
+
 GEM
   remote: https://rubygems.org/
   specs:
     concurrent-ruby (1.0.5)
-    minitar (0.6.1)
+    diff-lcs (1.3)
+    rake (10.5.0)
+    rspec (3.6.0)
+      rspec-core (~> 3.6.0)
+      rspec-expectations (~> 3.6.0)
+      rspec-mocks (~> 3.6.0)
+    rspec-core (3.6.0)
+      rspec-support (~> 3.6.0)
+    rspec-expectations (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-mocks (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-support (3.6.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  concurrent-ruby
-  minitar
+  bundler (~> 1.14)
+  minitar!
+  rake (~> 10.0)
+  rspec (~> 3.0)
+  unthread!
 
 BUNDLED WITH
    1.14.6
