@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require "unthread"
-require "pp"
 
 tar_file   = ARGV[0]
 output_dir = ARGV[1]
@@ -10,31 +9,7 @@ if tar_file.nil? || output_dir.nil?
   abort "Usage: #{$0} <file.tar> <output_dir>"
 end
 
-input             = Unthread::Entry.new(tar_file)
-created           = Concurrent::Array.new
-FILE_EXTRACT_POOL = Concurrent::FixedThreadPool.new(100, max_queue: 0)
-DIR_CREATE_POOL   = Concurrent::FixedThreadPool.new(100, max_queue: 0)
+input = Unthread::Entry.new(tar_file)
 
-input.directories.reverse_each do |dir|
-  DIR_CREATE_POOL.post do
-    next if created.include?(dir.fetch(:file_name))
-
-    FileUtils.mkdir_p(File.join(output_dir, dir.fetch(:file_name)), mode: dir.fetch(:mode))
-    created.concat Unthread::ParentDirectory.find(dir.fetch(:file_name))
-  end
-end
-
-
-DIR_CREATE_POOL.shutdown
-DIR_CREATE_POOL.wait_for_termination
-
-input.files.each do |file|
-  FILE_EXTRACT_POOL.post do
-    File.open(File.join(output_dir, file.fetch(:file_name)), "wb", perm: file.fetch(:mode)) do |io|
-      io.write(file.fetch(:content))
-    end
-  end
-end
-
-FILE_EXTRACT_POOL.shutdown
-FILE_EXTRACT_POOL.wait_for_termination
+Unthread::DirectoryCreator.run(input.directories, output_dir, threads: 100)
+Unthread::FileCreator.run(input.files, output_dir, threads: 100)
