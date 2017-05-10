@@ -7,18 +7,18 @@ module Unthread
       creator.shutdown
     end
 
-    attr_reader :pool
+    attr_reader :executor
 
     def initialize(directories, output_dir, threads)
       @directories = directories
       @output_dir  = output_dir
       @created     = Concurrent::Array.new
-      @pool        = Concurrent::FixedThreadPool.new(threads, max_queue: 0)
+      @executor    = Unthread::Executor.new(threads)
     end
 
     def queue
       @directories.sort_by(&:size).reverse_each do |dir|
-        pool.post do
+        executor.queue do
           next if @created.include?(dir.fetch(:file_name))
 
           FileUtils.mkdir_p(File.join(@output_dir, dir.fetch(:file_name)), mode: dir.fetch(:mode))
@@ -28,8 +28,7 @@ module Unthread
     end
 
     def shutdown
-      pool.shutdown
-      pool.wait_for_termination
+      executor.run
     end
   end
 end

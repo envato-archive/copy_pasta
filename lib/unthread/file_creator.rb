@@ -7,17 +7,17 @@ module Unthread
       creator.shutdown
     end
 
-    attr_reader :pool
+    attr_reader :executor
 
     def initialize(files, output_dir, threads)
       @files      = files
       @output_dir = output_dir
-      @pool       = Concurrent::FixedThreadPool.new(threads, max_queue: 0)
+      @executor   = Unthread::Executor.new(threads)
     end
 
     def queue
       @files.each do |file|
-        pool.post do
+        executor.queue do
           File.open(File.join(@output_dir, file.fetch(:file_name)), "wb", perm: file.fetch(:mode)) do |io|
             io.write(file.fetch(:content))
           end
@@ -26,8 +26,7 @@ module Unthread
     end
 
     def shutdown
-      pool.shutdown
-      pool.wait_for_termination
+      executor.run
     end
   end
 end
