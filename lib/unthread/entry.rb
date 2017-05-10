@@ -3,7 +3,8 @@ module Unthread
     attr_reader :files, :directories
 
     def initialize(tar)
-      @tar         = Archive::Tar::Minitar::Input.new(File.open(File.expand_path(tar)))
+      @tar         = File.expand_path(tar)
+      @tar_reader  = Archive::Tar::Minitar::Input.new(reader)
       @files       = []
       @directories = []
       read_tar
@@ -11,8 +12,16 @@ module Unthread
 
     private
 
+    def reader
+      begin
+        Zlib::GzipReader.new(File.open(@tar))
+      rescue Zlib::GzipFile::Error
+        File.open(@tar)
+      end
+    end
+
     def read_tar
-      @tar.each_entry do |entry|
+      @tar_reader.each_entry do |entry|
         if entry.file?
           @files << {
             file_name: entry.full_name,
