@@ -1,15 +1,33 @@
 #!/usr/bin/env ruby
 
 require "unthread"
+require "optparse"
 
-tar_file   = ARGV[0]
-output_dir = ARGV[1]
+options = { threads: 100 }
 
-if tar_file.nil? || output_dir.nil?
-  abort "Usage: #{$0} <file.tar> <output_dir>"
+op = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options] <tar_file>"
+
+  opts.on("-oDIR", "--output-dir=DIR", "Directory to extract files") do |dir|
+    options[:output_dir] = dir
+  end
+
+  opts.on("-nTHREADS", "--num-threads=THREADS", Integer, "Number of threads to use for extraction (Default: 100)") do |n|
+    options[:threads] = n
+  end
+
+  opts.on("-tTARFILE", "--tar-file=TARFILE", "The tar file to extract") do |t|
+    options[:tar_file] = t
+  end
 end
 
-input = Unthread::Entry.new(tar_file)
+op.parse!
 
-Unthread::DirectoryCreator.run(input.directories, output_dir, threads: 100)
-Unthread::FileCreator.run(input.files, output_dir, threads: 100)
+if options[:tar_file].nil? || options[:output_dir].nil?
+  abort op.banner
+end
+
+input = Unthread::Entry.new(options.fetch(:tar_file))
+
+Unthread::DirectoryCreator.run(input.directories, options.fetch(:output_dir), threads: options.fetch(:threads))
+Unthread::FileCreator.run(input.files, options.fetch(:output_dir), threads: options.fetch(:threads))
