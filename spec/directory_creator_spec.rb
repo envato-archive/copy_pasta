@@ -24,15 +24,15 @@ describe Unthread::DirectoryCreator do
 
   describe "#queue" do
     it "queues the creation" do
-      expect(subject.pool).to receive(:post).exactly(directories.count).times
+      expect(subject.executor).to receive(:queue).exactly(directories.count).times
       subject.queue
     end
   end
 
   describe "#shutdown" do
     it "turns the pool off" do
+      expect(subject.executor).to receive(:run)
       subject.shutdown
-      expect(subject.pool).to be_shutdown
     end
   end
 
