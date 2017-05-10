@@ -28,7 +28,7 @@ describe Unthread::Entry do
 
   subject { described_class.new(example_tar) }
 
-  context "Tar support" do
+  context "Tar Support" do
     describe "#directories" do
       it "returns directories" do
         expect(subject.directories).to eql(directories)
