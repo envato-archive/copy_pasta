@@ -5,6 +5,10 @@ describe Unthread::Entry do
     File.join(File.dirname(__FILE__), "output.tar")
   end
 
+  let(:example_tar_gz) do
+    File.join(File.dirname(__FILE__), "output.tar.gz")
+  end
+
   let(:directories) do
     [
       { file_name: "output/", mode: 493 },
@@ -24,15 +28,33 @@ describe Unthread::Entry do
 
   subject { described_class.new(example_tar) }
 
-  describe "#directories" do
-    it "returns directories" do
-      expect(subject.directories).to eql(directories)
+  context "Tar Support" do
+    describe "#directories" do
+      it "returns directories" do
+        expect(subject.directories).to eql(directories)
+      end
+    end
+
+    describe "#files" do
+      it "returns files" do
+        expect(subject.files).to eql(files)
+      end
     end
   end
 
-  describe "#files" do
-    it "returns files" do
-      expect(subject.files).to eql(files)
+  context "Gzip Support" do
+    subject { described_class.new(example_tar_gz) }
+
+    describe "#directories" do
+      it "returns directories" do
+        expect(subject.directories).to eql(directories)
+      end
+    end
+
+    describe "#files" do
+      it "returns files" do
+        expect(subject.files).to eql(files)
+      end
     end
   end
 end

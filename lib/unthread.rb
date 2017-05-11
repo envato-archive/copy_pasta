@@ -1,4 +1,5 @@
 require "concurrent"
+require "zlib"
 require "archive/tar/minitar"
 
 require "unthread/version"
