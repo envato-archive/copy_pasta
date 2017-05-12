@@ -1,7 +1,8 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+
+lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'unthread/version'
+require "unthread/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "unthread"
@@ -9,22 +10,14 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Justin Mazzi"]
   spec.email         = ["justin@pressed.net"]
 
-  spec.summary       = %q{Utility for unpacking tar files concurrently}
-  spec.description   = %q{Utility for unpacking tar files concurrently}
+  spec.summary       = "Utility for unpacking tar files concurrently"
+  spec.description   = "Utility for unpacking tar files concurrently"
   spec.homepage      = "https://pressed.net"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
-
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+  spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
+
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
@@ -33,6 +26,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "reek", "~> 4.6"
+  spec.add_development_dependency "rubocop", "~> 0.48"
+  spec.add_development_dependency "rubocop-rspec", "~> 1.15"
 
   spec.add_dependency "minitar-jmazzi", "0.5.4"
   spec.add_dependency "concurrent-ruby", "~> 1.0"

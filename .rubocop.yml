@@ -1,0 +1,23 @@
+require: rubocop-rspec
+
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'vendor/**/*'
+    - 'bundle_bin/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

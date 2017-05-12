@@ -1,7 +1,6 @@
 module Unthread
   # Public: Reads files and directories from a tar archive.
   class Entry
-
     # Public: Array of files within an archive.
     attr_reader :files
 
@@ -21,14 +20,13 @@ module Unthread
 
     private
 
-    # Private: Determines how to read the stream from a given tar or tar.gz file.
+    # Private: Determines how to read the stream from a given tar or tar.gz.
+    #
     # Returns a Zlib::GzipReader or String
     def stream_reader
-      begin
-        Zlib::GzipReader.new(File.open(@tar))
-      rescue Zlib::GzipFile::Error
-        @tar
-      end
+      Zlib::GzipReader.new(File.open(@tar))
+    rescue Zlib::GzipFile::Error
+      @tar
     end
 
     # Private: Read each entry from a tar file.

@@ -1,8 +1,6 @@
 module Unthread
   # Public: Concurrently creates files.
   class FileCreator
-
-
     # Public: Creates files in the given output dir.
     #
     # directories - Array of paths to create.
@@ -11,7 +9,7 @@ module Unthread
     def self.run(files, output_dir, threads: 100)
       creator = new(files, output_dir, threads)
       creator.queue
-      creator.shutdown
+      creator.run
     end
 
     # Public: The thread manager for creating directories
@@ -35,8 +33,8 @@ module Unthread
       end
     end
 
-    # Public: Shutsdown the Unthread::Executor.
-    def shutdown
+    # Public: Creates all files.
+    def run
       executor.run
     end
 

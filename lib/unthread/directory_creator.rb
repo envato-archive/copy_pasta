@@ -1,16 +1,16 @@
 module Unthread
   # Public: Concurrently creates directories.
   class DirectoryCreator
-
     # Public: Creates directories in the given output dir.
     #
     # directories - Array of paths to create.
     # output_dir  - String path to the output directory.
-    # threads     - Number of threads to use for directory creation. Default is 100.
+    # threads     - Number of threads used for directory creation.
+    # Default is 100.
     def self.run(directories, output_dir, threads: 100)
       creator = new(directories, output_dir, threads)
       creator.queue
-      creator.shutdown
+      creator.run
     end
 
     # Public: The thread manager for creating directories
@@ -31,17 +31,12 @@ module Unthread
     # Public: Adds all directories to the queue to be created.
     def queue
       @directories.sort_by(&:size).reverse_each do |dir|
-        executor.queue do
-          file_name = dir.fetch(:file_name)
-          unless @created.include?(file_name)
-            create_directory(file_name, dir[:mode])
-          end
-        end
+        executor.queue { create_directory(dir[:file_name], dir[:mode]) }
       end
     end
 
-    # Public: Shutsdown the Unthread::Executor.
-    def shutdown
+    # Public: Creates all directories.
+    def run
       executor.run
     end
 
@@ -53,6 +48,8 @@ module Unthread
     # dir  - String directory to create.
     # mode - Numeric directory permissions(chmod).
     def create_directory(dir, mode)
+      return if @created.include?(dir)
+
       FileUtils.mkdir_p(File.join(@output_dir, dir), mode: mode)
       @created.concat Unthread::ParentDirectory.find(dir)
     end
