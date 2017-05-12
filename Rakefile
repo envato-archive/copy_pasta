@@ -1,6 +1,9 @@
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
+require "reek/rake/task"
 
-RSpec::Core::RakeTask.new(:spec)
 
-task :default => :spec
+Reek::Rake::Task.new
+RSpec::Core::RakeTask.new
+
+task default: %i[spec reek]
