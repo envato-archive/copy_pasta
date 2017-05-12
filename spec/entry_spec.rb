@@ -11,11 +11,11 @@ describe Unthread::Entry do
 
   let(:directories) do
     [
-      { file_name: "output/", mode: 493 },
-      { file_name: "output/a/", mode: 493 },
-      { file_name: "output/b/", mode: 493 },
-      { file_name: "output/c/", mode: 493 },
-      { file_name: "output/b/subdir/", mode: 493 }
+      { file_name: "output/", mode: 493, content: nil },
+      { file_name: "output/a/", mode: 493, content: nil },
+      { file_name: "output/b/", mode: 493, content: nil },
+      { file_name: "output/c/", mode: 493, content: nil },
+      { file_name: "output/b/subdir/", mode: 493, content: nil }
     ]
   end
 
