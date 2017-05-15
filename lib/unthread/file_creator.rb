@@ -29,7 +29,7 @@ module Unthread
     # Public: Adds all files to the queue to be created.
     def create_work
       @files.each do |file|
-        executor.queue { create_file(**file.to_hash) }
+        executor.queue { create(file[:file_name], file[:mode], file[:content]) }
       end
     end
 
@@ -45,7 +45,7 @@ module Unthread
     # file    - String path to the file.
     # mode    - Numeric file permission(chmod).
     # content - String contents of the file.
-    def create_file(file_name:, mode:, content:)
+    def create(file_name, mode, content)
       File.open(File.join(@output_dir, file_name), "wb", perm: mode) do |io|
         io.write(content)
       end

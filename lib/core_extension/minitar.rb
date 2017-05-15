@@ -5,7 +5,7 @@ module CoreExtensions
     #
     # Returns a Hash.
     def to_hash
-      { file_name: full_name, mode: mode, content: read }
+      { file_name: full_name, mode: mode, content: read, directory: directory? }
     end
   end
 end

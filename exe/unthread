@@ -21,13 +21,17 @@ op = OptionParser.new do |opts|
   opts.on("-tTARFILE", "--tar-file=TARFILE", "The tar file to extract") do |t|
     options[:tar_file] = t
   end
+
+  opts.on("-pPATTERN", "--pattern=PATTERN", "Extract files that match PATTERN") do |t|
+    options[:pattern] = t
+  end
 end
 
 op.parse!
 
 abort op.banner if options[:tar_file].nil? || options[:output_dir].nil?
 
-input   = Unthread::Entry.new(options.fetch(:tar_file))
+input   = Unthread::Entry.new(options.fetch(:tar_file), options[:pattern])
 dir     = options.fetch(:output_dir)
 threads = options.fetch(:threads)
 
