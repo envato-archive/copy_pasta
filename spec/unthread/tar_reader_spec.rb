@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Unthread::Entry do
+describe Unthread::TarReader do
   let(:described_instance) { described_class.new(example_tar) }
 
   let(:example_tar) do

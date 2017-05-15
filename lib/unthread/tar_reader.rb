@@ -1,6 +1,6 @@
 module Unthread
   # Public: Reads files and directories from a tar archive.
-  class Entry
+  class TarReader
     # Public - Creates an instance of Entry.
     #
     # tar     - String path to the tar file to extract.
