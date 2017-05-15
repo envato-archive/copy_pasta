@@ -7,7 +7,7 @@ module Unthread
     # pattern - A regex to extract specific files and directories.
     def initialize(tar, pattern = nil)
       @tar        = File.expand_path(tar)
-      @tar_reader = Archive::Tar::Minitar::Input.new(stream_reader)
+      @tar_reader = Archive::Tar::Minitar::Input.new(io_reader)
       @entries    = []
       @pattern    = pattern ? Regexp.new(pattern) : false
       read_tar
@@ -32,7 +32,7 @@ module Unthread
     # Private: Determines how to read the stream from a given tar or tar.gz.
     #
     # Returns a Zlib::GzipReader or String
-    def stream_reader
+    def io_reader
       Zlib::GzipReader.new(File.open(@tar))
     rescue Zlib::GzipFile::Error
       @tar
