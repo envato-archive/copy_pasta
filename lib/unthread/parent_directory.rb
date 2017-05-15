@@ -18,9 +18,9 @@ module Unthread
     #
     # path - String path to the directory to find parents.
     def initialize(path)
-      @path    = path.gsub(/\/{1,}+/, '/')
-      @parents = find_parents.tap { |parent| parent.delete('/') }
-      @parents.map! { |parent| File.join(parent, '/') }
+      @path    = path.gsub(%r{\/{1,}+}, "/")
+      @parents = find_parents.tap { |parent| parent.delete("/") }
+      @parents.map! { |parent| File.join(parent, "/") }
     end
 
     private
@@ -29,9 +29,9 @@ module Unthread
     #
     # Returns an Array of parent directories
     def find_parents
-      @path.count("/").times.map do
+      Array.new(@path.count("/")) do
         new_path = File.dirname(@path)
-        @path = new_path unless %w(/ .).include?(new_path)
+        @path = new_path unless %w[/ .].include?(new_path)
       end.compact
     end
   end

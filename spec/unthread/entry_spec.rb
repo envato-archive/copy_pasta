@@ -1,12 +1,14 @@
 require "spec_helper"
 
 describe Unthread::Entry do
+  let(:described_instance) { described_class.new(example_tar) }
+
   let(:example_tar) do
-    File.join(File.dirname(__FILE__), "output.tar")
+    File.join(File.dirname(__FILE__), "..", "output.tar")
   end
 
   let(:example_tar_gz) do
-    File.join(File.dirname(__FILE__), "output.tar.gz")
+    File.join(File.dirname(__FILE__), "..", "output.tar.gz")
   end
 
   let(:directories) do
@@ -26,34 +28,32 @@ describe Unthread::Entry do
     ]
   end
 
-  subject { described_class.new(example_tar) }
-
   context "Tar Support" do
     describe "#directories" do
       it "returns directories" do
-        expect(subject.directories).to eql(directories)
+        expect(described_instance.directories).to eql(directories)
       end
     end
 
     describe "#files" do
       it "returns files" do
-        expect(subject.files).to eql(files)
+        expect(described_instance.files).to eql(files)
       end
     end
   end
 
   context "Gzip Support" do
-    subject { described_class.new(example_tar_gz) }
+    let(:described_instance) { described_class.new(example_tar_gz) }
 
     describe "#directories" do
       it "returns directories" do
-        expect(subject.directories).to eql(directories)
+        expect(described_instance.directories).to eql(directories)
       end
     end
 
     describe "#files" do
       it "returns files" do
-        expect(subject.files).to eql(files)
+        expect(described_instance.files).to eql(files)
       end
     end
   end

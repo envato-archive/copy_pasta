@@ -10,4 +10,5 @@ module CoreExtensions
   end
 end
 
-Archive::Tar::Minitar::Reader::EntryStream.include(CoreExtensions::MinitarEntryStream)
+Archive::Tar::Minitar::Reader::EntryStream
+  .include(CoreExtensions::MinitarEntryStream)

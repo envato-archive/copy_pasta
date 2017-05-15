@@ -6,13 +6,15 @@ require "optparse"
 options = { threads: 100 }
 
 op = OptionParser.new do |opts|
-  opts.banner = "Usage: #{$0} [options] <tar_file>"
+  opts.banner = "Usage: #{$PROGRAM_NAME} [options] <tar_file>"
 
   opts.on("-oDIR", "--output-dir=DIR", "Directory to extract files") do |dir|
     options[:output_dir] = dir
   end
 
-  opts.on("-nTHREADS", "--num-threads=THREADS", Integer, "Number of threads to use for extraction (Default: 100)") do |n|
+  banner = "Number of threads to use for extraction (Default: 100)"
+
+  opts.on("-nTHREADS", "--num-threads=THREADS", Integer, banner) do |n|
     options[:threads] = n
   end
 
@@ -23,11 +25,11 @@ end
 
 op.parse!
 
-if options[:tar_file].nil? || options[:output_dir].nil?
-  abort op.banner
-end
+abort op.banner if options[:tar_file].nil? || options[:output_dir].nil?
 
-input = Unthread::Entry.new(options.fetch(:tar_file))
+input   = Unthread::Entry.new(options.fetch(:tar_file))
+dir     = options.fetch(:output_dir)
+threads = options.fetch(:threads)
 
-Unthread::DirectoryCreator.run(input.directories, options.fetch(:output_dir), threads: options.fetch(:threads))
-Unthread::FileCreator.run(input.files, options.fetch(:output_dir), threads: options.fetch(:threads))
+Unthread::DirectoryCreator.run(input.directories, dir, threads: threads)
+Unthread::FileCreator.run(input.files, dir, threads: threads)
