@@ -31,7 +31,7 @@ op.parse!
 
 abort op.banner if options[:tar_file].nil? || options[:output_dir].nil?
 
-input   = Unthread::Entry.new(options.fetch(:tar_file), options[:pattern])
+input   = Unthread::TarReader.new(options.fetch(:tar_file), options[:pattern])
 dir     = options.fetch(:output_dir)
 threads = options.fetch(:threads)
 
