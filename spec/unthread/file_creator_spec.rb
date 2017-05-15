@@ -20,7 +20,7 @@ describe Unthread::FileCreator do
   describe "#queue" do
     it "queues the creation" do
       allow(described_instance.executor).to receive(:queue)
-      described_instance.queue
+      described_instance.create_work
 
       expect(described_instance.executor)
         .to have_received(:queue).exactly(files.count).times

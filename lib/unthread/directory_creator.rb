@@ -9,7 +9,7 @@ module Unthread
     # Default is 100.
     def self.run(directories, output_dir, threads: 100)
       creator = new(directories, output_dir, threads)
-      creator.queue
+      creator.create_work
       creator.run
     end
 
@@ -29,9 +29,9 @@ module Unthread
     end
 
     # Public: Adds all directories to the queue to be created.
-    def queue
+    def create_work
       @directories.sort_by(&:size).reverse_each do |dir|
-        executor.queue { create_directory(dir[:file_name], dir[:mode]) }
+        executor.queue { create_directory(**dir.to_hash) }
       end
     end
 
@@ -47,11 +47,11 @@ module Unthread
     #
     # dir  - String directory to create.
     # mode - Numeric directory permissions(chmod).
-    def create_directory(dir, mode)
-      return if @created.include?(dir)
+    def create_directory(file_name:, mode:)
+      return if @created.include?(file_name)
 
-      FileUtils.mkdir_p(File.join(@output_dir, dir), mode: mode)
-      @created.concat Unthread::ParentDirectory.find(dir)
+      FileUtils.mkdir_p(File.join(@output_dir, file_name), mode: mode)
+      @created.concat Unthread::ParentDirectory.find(file_name)
     end
   end
 end
