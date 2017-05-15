@@ -8,7 +8,7 @@ module Unthread
     # threads     - Number of threads to use for file creation. Default is 100.
     def self.run(files, output_dir, threads: 100)
       creator = new(files, output_dir, threads)
-      creator.queue
+      creator.create_work
       creator.run
     end
 
@@ -27,7 +27,7 @@ module Unthread
     end
 
     # Public: Adds all files to the queue to be created.
-    def queue
+    def create_work
       @files.each do |file|
         executor.queue { create_file(**file.to_hash) }
       end

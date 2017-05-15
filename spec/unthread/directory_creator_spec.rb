@@ -28,7 +28,7 @@ describe Unthread::DirectoryCreator do
     describe "#queue" do
       it "queues the creation" do
         allow(executor).to receive(:queue)
-        described_instance.queue
+        described_instance.create_work
 
         expect(executor).to have_received(:queue)
           .exactly(directories.count).times

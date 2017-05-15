@@ -1,14 +1,12 @@
 module Unthread
   # Public: Detects the parent paths of a given directory
   class ParentDirectory
-    class << self
-      # Public: Find all the parent directories of a given path
-      #
-      # path - String path to the directory to find parents.
-      def find(path)
-        pd = new(path)
-        pd.parents
-      end
+    # Public: Find all the parent directories of a given path
+    #
+    # path - String path to the directory to find parents.
+    def self.find(path)
+      pd = new(path)
+      pd.parents
     end
 
     # Public: Array of parent directories
