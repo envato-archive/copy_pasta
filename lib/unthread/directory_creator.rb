@@ -16,7 +16,7 @@ module Unthread
         dirs_per_sec = processed / (Time.now - start)
         percent      = (processed / creator.directories.size.to_f) * 100
 
-        print "\rDirectories: %.2f r/s - %d/%d %d%%" % [dirs_per_sec, processed, creator.directories.size, percent]
+        print "\rDirectories: %.2f r/s - %d/%d %d%" % [dirs_per_sec, processed, creator.directories.size, percent]
       end
 
 
