@@ -67,7 +67,6 @@ module Unthread
     def create(dir, mode)
       return if @created.include?(dir)
 
-      sleep 0.1
       FileUtils.mkdir_p(File.join(@output_dir, dir), mode: mode)
       @created.concat Unthread::ParentDirectory.find(dir)
     end
