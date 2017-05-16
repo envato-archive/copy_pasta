@@ -13,18 +13,18 @@ describe Unthread::TarReader do
 
   let(:directories) do
     [
-      { file_name: "output/", mode: 493, content: nil, directory: true },
-      { file_name: "output/a/", mode: 493, content: nil, directory: true },
-      { file_name: "output/b/", mode: 493, content: nil, directory: true },
-      { file_name: "output/c/", mode: 493, content: nil, directory: true },
-      { file_name: "output/b/subdir/", mode: 493, content: nil, directory: true }
+      { file_name: "output/", mode: 493, content: nil, directory: true, file: false },
+      { file_name: "output/a/", mode: 493, content: nil, directory: true, file: false },
+      { file_name: "output/b/", mode: 493, content: nil, directory: true, file: false },
+      { file_name: "output/c/", mode: 493, content: nil, directory: true, file: false },
+      { file_name: "output/b/subdir/", mode: 493, content: nil, directory: true, file: false }
     ]
   end
 
   let(:files) do
     [
-      { file_name: "output/a/0", content: "0\n", mode: 420, directory: false },
-      { file_name: "output/a/1", content: "1\n", mode: 420, directory: false }
+      { file_name: "output/a/0", content: "0\n", mode: 420, directory: false, file: true },
+      { file_name: "output/a/1", content: "1\n", mode: 420, directory: false, file: true }
     ]
   end
 
@@ -67,8 +67,8 @@ describe Unthread::TarReader do
 
     let(:expected_directories) do
       [
-        { file_name: "output/b/", mode: 493, content: nil, directory: true },
-        { file_name: "output/b/subdir/", mode: 493, content: nil, directory: true }
+        { file_name: "output/b/", mode: 493, content: nil, directory: true, file: false },
+        { file_name: "output/b/subdir/", mode: 493, content: nil, directory: true, file: false }
       ]
     end
 

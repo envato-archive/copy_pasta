@@ -6,25 +6,23 @@ module Unthread
     # tar     - String path to the tar file to extract.
     # pattern - A regex to extract specific files and directories.
     def initialize(tar, pattern = nil)
-      @tar        = File.expand_path(tar)
-      @tar_reader = Archive::Tar::Minitar::Input.new(io_reader)
-      @entries    = []
-      @pattern    = pattern ? Regexp.new(pattern) : false
-      read_tar
+      @tar     = File.expand_path(tar)
+      @pattern = pattern ? Regexp.new(pattern) : false
+      @entries = tar_reader.to_a
     end
 
     # Public: List the directories in a tar
     #
     # Returns Array
     def directories
-      @entries.select { |entry| entry[:directory] }
+      matching_files.select { |entry| entry[:directory] }
     end
 
     # Public: List the files in a tar
     #
     # Returns Array
     def files
-      @entries.reject { |entry| entry[:directory] }
+      matching_files.select { |entry| entry[:file] }
     end
 
     private
@@ -38,15 +36,19 @@ module Unthread
       @tar
     end
 
-    # Private: Read each entry from a tar file.
-    def read_tar
-      @tar_reader.each_entry do |entry|
-        next unless entry.file? || entry.directory?
+    # Private: Creates a Minitar reader
+    #
+    # Returns an instance of Archive::Tar::Minitar::Input
+    def tar_reader
+      Archive::Tar::Minitar::Input.new(io_reader)
+    end
 
-        if !@pattern || entry.full_name.match(@pattern)
-          @entries << entry.to_hash
-        end
-      end
+    # Private: Read each entry from a tar file.
+    #
+    # Returns an Array
+    def matching_files
+      return @entries unless @pattern
+      @entries.select { |entry| entry[:file_name].match(@pattern) }
     end
   end
 end
