@@ -8,12 +8,28 @@ module Unthread
     # threads     - Number of threads to use for file creation. Default is 100.
     def self.run(files, output_dir, threads: 100)
       creator = new(files, output_dir, threads)
+
+      start = Time.now
+      output = Concurrent::TimerTask.new(execution_interval: 1) do
+        processed    = creator.executor.completed_task_count
+        files_per_sec = processed / (Time.now - start)
+        percent      = (processed / creator.files.size.to_f) * 100
+
+        print "\f%.2f r/s - %d/%d %d%%" % [reqs_per_sec, processed, creator.files.size, percent]
+      end
+
+
+      output.execute
       creator.create_work
       creator.run
+      output.shutdown
+      puts
     end
 
     # Public: The thread manager for creating directories
     attr_reader :executor
+
+    attr_reader :files
 
     # Public: Initialize a new FileCreator.
     #

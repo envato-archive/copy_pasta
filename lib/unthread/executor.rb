@@ -25,5 +25,9 @@ module Unthread
     def run
       Concurrent::Promise.zip(*@promises).value!
     end
+
+    def completed_task_count
+      @promises.select { |promise|  promise.complete? }.size
+    end
   end
 end
