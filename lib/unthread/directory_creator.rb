@@ -11,24 +11,27 @@ module Unthread
       creator = new(directories, output_dir, threads)
 
       start = Time.now
-
       output = Concurrent::TimerTask.new(execution_interval: 1) do
-        print "poop"
-        # processed    = creator.executor.completed_task_count
-        # reqs_per_sec = processed / (Time.now - start)
-        # percent      = (processed / creator.directories.size.to_f) * 100
-        #
-        # print "\r%.2f r/s - %d/%d %d%%" % [reqs_per_sec, processed, creator.directories.size.to_f, percent]
+        processed    = creator.executor.completed_task_count
+        dirs_per_sec = processed / (Time.now - start)
+        percent      = (processed / creator.directories.size.to_f) * 100
+
+        print "\rDirectories: %.2f r/s - %d/%d %d%%" % [dirs_per_sec, processed, creator.directories.size, percent]
       end
 
+
       output.execute
+
       creator.create_work
       creator.run
       output.shutdown
+      puts
     end
 
     # Public: The thread manager for creating directories
     attr_reader :executor
+
+    attr_reader :directories
 
     # Public: Initialize a new DirectoryCreator.
     #
@@ -64,6 +67,7 @@ module Unthread
     def create(dir, mode)
       return if @created.include?(dir)
 
+      sleep 0.1
       FileUtils.mkdir_p(File.join(@output_dir, dir), mode: mode)
       @created.concat Unthread::ParentDirectory.find(dir)
     end

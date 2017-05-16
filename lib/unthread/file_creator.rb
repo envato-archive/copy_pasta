@@ -15,7 +15,7 @@ module Unthread
         files_per_sec = processed / (Time.now - start)
         percent      = (processed / creator.files.size.to_f) * 100
 
-        print "\f%.2f r/s - %d/%d %d%%" % [reqs_per_sec, processed, creator.files.size, percent]
+        print "\rFiles: %.2f r/s - %d/%d %d%%" % [files_per_sec, processed, creator.files.size, percent]
       end
 
 
