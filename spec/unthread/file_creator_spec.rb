@@ -3,18 +3,19 @@ require "spec_helper"
 describe Unthread::FileCreator do
   let(:described_instance) { described_class.new(files, scratch_dir, 1) }
 
-  let(:files) do
-    [
-      { file_name: "output/1.txt", content: "1", mode: 0o644 },
-      { file_name: "output/2.txt", content: "2", mode: 0o644 }
-    ]
-  end
-
   let(:scratch_dir) { "/tmp/output" }
+  let(:stat_1_double) { instance_double(File::Stat) }
+  let(:stat_2_double) { instance_double(File::Stat) }
+  let(:file1) { Unthread::FileAttribute.new("/tmp/output/1.txt", scratch_dir) }
+  let(:file2) { Unthread::FileAttribute.new("/tmp/output/2.txt", scratch_dir) }
+  let(:files) { [file1, file2] }
 
   before do
     FileUtils.rm_rf(scratch_dir)
     FileUtils.mkdir_p(File.join(scratch_dir, "output"))
+
+    allow(File).to receive(:stat).with("/tmp/output/1.txt").and_return(stat_1_double)
+    allow(File).to receive(:stat).with("/tmp/output/2.txt").and_return(stat_2_double)
   end
 
   describe "#queue" do
@@ -36,11 +37,25 @@ describe Unthread::FileCreator do
   end
 
   describe "#self.run" do
-    let(:path) { File.join(scratch_dir, "output") }
+    let(:path) { "/tmp/output2" }
 
-    before { described_class.run(files, scratch_dir, threads: 1) }
+    before do
+      allow(FileUtils).to receive(:cp)
+        .with(file1.file_name, File.join(path, file1.relative_file_name))
+      allow(FileUtils).to receive(:cp)
+        .with(file2.file_name, File.join(path, file2.relative_file_name))
 
-    it { expect(File.read(File.join(path, "1.txt"))).to eql("1") }
-    it { expect(File.read(File.join(path, "2.txt"))).to eql("2") }
+      described_class.run(files, path, threads: 1)
+    end
+
+    it "copies file1" do
+      expect(FileUtils).to have_received(:cp)
+        .with(file1.file_name, File.join(path, file1.relative_file_name))
+    end
+
+    it "copies file2" do
+      expect(FileUtils).to have_received(:cp)
+        .with(file2.file_name, File.join(path, file2.relative_file_name))
+    end
   end
 end

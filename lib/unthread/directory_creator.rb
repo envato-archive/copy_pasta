@@ -31,7 +31,7 @@ module Unthread
     # Public: Adds all directories to the queue to be created.
     def create_work
       @directories.sort_by(&:size).reverse_each do |dir|
-        executor.queue { create(dir.fetch(:file_name), dir.fetch(:mode)) }
+        executor.queue { create(dir) }
       end
     end
 
@@ -47,11 +47,11 @@ module Unthread
     #
     # dir  - String directory to create.
     # mode - Numeric directory permissions(chmod).
-    def create(dir, mode)
-      return if @created.include?(dir)
-
-      FileUtils.mkdir_p(File.join(@output_dir, dir), mode: mode)
-      @created.concat Unthread::ParentDirectory.find(dir)
+    def create(dir)
+      dir_name = dir.file_name
+      return if @created.include?(dir_name)
+      dir.create_directory(@output_dir)
+      @created.concat Unthread::ParentDirectory.find(dir_name)
     end
   end
 end
