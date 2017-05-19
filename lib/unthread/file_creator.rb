@@ -3,9 +3,9 @@ module Unthread
   class FileCreator
     # Public: Creates files in the given output dir.
     #
-    # directories - Array of paths to create.
-    # output_dir  - String path to the output directory.
-    # threads     - Number of threads to use for file creation. Default is 100.
+    # files      - Array of files to create.
+    # output_dir - String path to the output directory.
+    # threads    - Number of threads to use for file creation. Default is 100.
     def self.run(files, output_dir, threads: 100)
       creator = new(files, output_dir, threads)
       creator.create_work
@@ -17,9 +17,9 @@ module Unthread
 
     # Public: Initialize a new FileCreator.
     #
-    # files       - Array of files to create.
-    # output_dir  - String path to the output directory.
-    # threads     - Number of threads to use for directory creation
+    # files      - Array of files to create.
+    # output_dir - String path to the output directory.
+    # threads    - Number of threads to use for directory creation
     def initialize(files, output_dir, threads)
       @files      = files
       @output_dir = output_dir

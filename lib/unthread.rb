@@ -1,9 +1,7 @@
 require "concurrent"
 require "zlib"
-require "archive/tar/minitar"
 require "forwardable"
 
-require "core_extension/minitar"
 require "unthread/version"
 require "unthread/file_attribute"
 require "unthread/parent_directory"

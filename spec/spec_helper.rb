@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "simplecov"
+SimpleCov.start
 require "unthread"
 
 RSpec.configure do |config|

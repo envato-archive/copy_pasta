@@ -30,6 +30,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop-rspec", "~> 1.15"
   spec.add_development_dependency "simplecov"
 
-  spec.add_dependency "minitar-jmazzi", "0.5.4"
   spec.add_dependency "concurrent-ruby", "~> 1.0"
 end

@@ -8,30 +8,29 @@ options = { threads: 100 }
 op = OptionParser.new do |opts|
   opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
 
-  opts.on("-oDIR", "--output-dir=DIR", "Directory to extract files") do |dir|
-    options[:output_dir] = dir
+  opts.on("-sDIRECTORY", "--source-directory=DIRECTORY", "The source directory to copy from") do |t|
+    options[:source_directory] = t
   end
 
-  banner = "Number of threads to use for extraction (Default: 100)"
+  opts.on("-dDIR", "--destination-dir=DIR", "Directory to copy files to") do |dir|
+    options[:destination_directory] = dir
+  end
 
-  opts.on("-nTHREADS", "--num-threads=THREADS", Integer, banner) do |n|
+  opts.on("-nTHREADS", "--num-threads=THREADS", Integer, "Number of threads to use for extraction (Default: 100)") do |n|
     options[:threads] = n
   end
-  opts.on("-sDIRECTORY", "--source-directory=DIRECTORY", "The source directory to copy from") do |t|
-    options[:directory] = t
-  end
 
-  opts.on("-pPATTERN", "--pattern=PATTERN", "Extract files that match PATTERN") do |t|
+  opts.on("-pPATTERN", "--pattern=PATTERN", "Extract files that match the ruby Regexp PATTERN") do |t|
     options[:pattern] = t
   end
 end
 
 op.parse!
 
-abort op.banner if options[:directory].nil? || options[:output_dir].nil?
+abort op.banner if options[:source_directory].nil? || options[:destination_directory].nil?
 
-input   = Unthread::DirectoryReader.new(options.fetch(:directory), options[:pattern])
-dir     = options.fetch(:output_dir)
+input   = Unthread::DirectoryReader.new(options.fetch(:source_directory), options[:pattern])
+dir     = options.fetch(:destination_directory)
 threads = options.fetch(:threads)
 
 Unthread::DirectoryCreator.run(input.directories, dir, threads: threads)

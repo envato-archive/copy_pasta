@@ -1,21 +1,23 @@
 require "spec_helper"
 
 describe Unthread::FileCreator do
-  let(:described_instance) { described_class.new(files, scratch_dir, 1) }
-
-  let(:scratch_dir) { "/tmp/output" }
-  let(:stat_1_double) { instance_double(File::Stat) }
-  let(:stat_2_double) { instance_double(File::Stat) }
-  let(:file1) { Unthread::FileAttribute.new("/tmp/output/1.txt", scratch_dir) }
-  let(:file2) { Unthread::FileAttribute.new("/tmp/output/2.txt", scratch_dir) }
-  let(:files) { [file1, file2] }
+  let(:files) { Unthread::DirectoryReader.new(source_directory).files }
+  let(:described_instance) { described_class.new(files, source_directory, 1) }
+  let(:source_directory) { "/tmp/output" }
+  let(:destination_directory) { "/tmp/output2" }
 
   before do
-    FileUtils.rm_rf(scratch_dir)
-    FileUtils.mkdir_p(File.join(scratch_dir, "output"))
+    FileUtils.rm_rf(source_directory)
+    FileUtils.rm_rf(destination_directory)
 
-    allow(File).to receive(:stat).with("/tmp/output/1.txt").and_return(stat_1_double)
-    allow(File).to receive(:stat).with("/tmp/output/2.txt").and_return(stat_2_double)
+    FileUtils.mkdir_p(source_directory)
+    FileUtils.mkdir_p(File.join(source_directory, "sub", "dir"))
+    FileUtils.mkdir_p(destination_directory)
+    FileUtils.mkdir_p(File.join(destination_directory, "sub", "dir"))
+
+    FileUtils.touch("/tmp/output/1.txt")
+    FileUtils.touch("/tmp/output/2.txt")
+    FileUtils.touch("/tmp/output/sub/dir/3.txt")
   end
 
   describe "#queue" do
@@ -38,24 +40,14 @@ describe Unthread::FileCreator do
 
   describe "#self.run" do
     let(:path) { "/tmp/output2" }
+    let(:dir_reader) { Unthread::DirectoryReader.new(destination_directory) }
+    let(:created_files) { dir_reader.files.map(&:file_name) }
 
-    before do
-      allow(FileUtils).to receive(:cp)
-        .with(file1.file_name, File.join(path, file1.relative_file_name))
-      allow(FileUtils).to receive(:cp)
-        .with(file2.file_name, File.join(path, file2.relative_file_name))
+    before { described_class.run(files, path, threads: 1) }
 
-      described_class.run(files, path, threads: 1)
-    end
-
-    it "copies file1" do
-      expect(FileUtils).to have_received(:cp)
-        .with(file1.file_name, File.join(path, file1.relative_file_name))
-    end
-
-    it "copies file2" do
-      expect(FileUtils).to have_received(:cp)
-        .with(file2.file_name, File.join(path, file2.relative_file_name))
+    it "creates all files" do
+      expect(created_files)
+        .to include("/tmp/output2/1.txt", "/tmp/output2/2.txt", "/tmp/output2/sub/dir/3.txt")
     end
   end
 end

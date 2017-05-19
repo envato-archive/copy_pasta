@@ -22,11 +22,22 @@ describe Unthread::FileAttribute do
   end
 
   describe "#copy_file" do
-    it "copies to the file to the destination" do
-      allow(FileUtils).to receive(:cp).with("/tmp/file.txt", "/tmp2/file.txt")
-      described_instance.copy_file("/tmp2")
+    let(:write_double) { instance_double(File) }
 
-      expect(FileUtils).to have_received(:cp).with("/tmp/file.txt", "/tmp2/file.txt")
+    before do
+      allow(described_instance).to receive(:content).and_return("testing")
+      allow(write_double).to receive(:write).with("testing")
+      allow(File).to receive(:open).with("/tmp2/file.txt", "wb", perm: 123).and_yield(write_double)
+
+      described_instance.copy_file("/tmp2")
+    end
+
+    it "writes the file to the destination directory" do
+      expect(File).to have_received(:open).with("/tmp2/file.txt", "wb", perm: 123)
+    end
+
+    it "uses the source file's content for writing" do
+      expect(write_double).to have_received(:write).with("testing")
     end
   end
 

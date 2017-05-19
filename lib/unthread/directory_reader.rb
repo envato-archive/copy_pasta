@@ -42,7 +42,7 @@ module Unthread
     # Returns an Array
     def matching_files
       return @entries unless @pattern
-      @entries.select { |entry| entry.file_name.match(@pattern) }
+      @entries.select { |entry| entry.relative_file_name.match(@pattern) }
     end
   end
 end
