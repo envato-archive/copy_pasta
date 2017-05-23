@@ -1,20 +1,23 @@
 require "spec_helper"
 
 describe Unthread::FileCreator do
-  let(:described_instance) { described_class.new(files, scratch_dir, 1) }
-
-  let(:files) do
-    [
-      { file_name: "output/1.txt", content: "1", mode: 0o644 },
-      { file_name: "output/2.txt", content: "2", mode: 0o644 }
-    ]
-  end
-
-  let(:scratch_dir) { "/tmp/output" }
+  let(:files) { Unthread::DirectoryReader.new(source_directory).files }
+  let(:described_instance) { described_class.new(files, source_directory, 1) }
+  let(:source_directory) { "/tmp/output" }
+  let(:destination_directory) { "/tmp/output2" }
 
   before do
-    FileUtils.rm_rf(scratch_dir)
-    FileUtils.mkdir_p(File.join(scratch_dir, "output"))
+    FileUtils.rm_rf(source_directory)
+    FileUtils.rm_rf(destination_directory)
+
+    FileUtils.mkdir_p(source_directory)
+    FileUtils.mkdir_p(File.join(source_directory, "sub", "dir"))
+    FileUtils.mkdir_p(destination_directory)
+    FileUtils.mkdir_p(File.join(destination_directory, "sub", "dir"))
+
+    FileUtils.touch("/tmp/output/1.txt")
+    FileUtils.touch("/tmp/output/2.txt")
+    FileUtils.touch("/tmp/output/sub/dir/3.txt")
   end
 
   describe "#queue" do
@@ -36,11 +39,15 @@ describe Unthread::FileCreator do
   end
 
   describe "#self.run" do
-    let(:path) { File.join(scratch_dir, "output") }
+    let(:path) { "/tmp/output2" }
+    let(:dir_reader) { Unthread::DirectoryReader.new(destination_directory) }
+    let(:created_files) { dir_reader.files.map(&:file_name) }
 
-    before { described_class.run(files, scratch_dir, threads: 1) }
+    before { described_class.run(files, path, threads: 1) }
 
-    it { expect(File.read(File.join(path, "1.txt"))).to eql("1") }
-    it { expect(File.read(File.join(path, "2.txt"))).to eql("2") }
+    it "creates all files" do
+      expect(created_files)
+        .to include("/tmp/output2/1.txt", "/tmp/output2/2.txt", "/tmp/output2/sub/dir/3.txt")
+    end
   end
 end

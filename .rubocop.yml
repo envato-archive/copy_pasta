@@ -24,3 +24,5 @@ Style/StringLiterals:
 
 Metrics/LineLength:
   Max: 100
+  Exclude:
+    - 'exe/*'
