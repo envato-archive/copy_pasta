@@ -2,7 +2,17 @@ require "spec_helper"
 
 describe Unthread::DirectoryCreator do
   context "Executor" do
-    let(:described_instance) { described_class.new([1, 2], "/tmp/output", 1) }
+    before do
+      allow(file_attribute).to receive(:size).and_return(0)
+      allow(file_attribute).to receive(:relative_file_name).and_return("file")
+    end
+
+    let(:file_attribute) { instance_double(Unthread::FileAttribute) }
+
+    let(:described_instance) do
+      described_class.new([file_attribute, file_attribute], "/tmp/output", 1)
+    end
+
     let(:executor) { described_instance.executor }
 
     describe "#create_work" do

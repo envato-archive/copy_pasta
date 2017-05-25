@@ -3,7 +3,8 @@
 require "unthread"
 require "optparse"
 
-options = { threads: 100 }
+options     = { threads: 100 }
+permissions = {}
 
 op = OptionParser.new do |opts|
   opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
@@ -23,6 +24,22 @@ op = OptionParser.new do |opts|
   opts.on("-pPATTERN", "--pattern=PATTERN", "Extract files that match the ruby Regexp PATTERN") do |t|
     options[:pattern] = t
   end
+
+  opts.on("-uUSER", "--user=USER", "The unix username for chowning each file and directory") do |t|
+    permissions[:user] = t
+  end
+
+  opts.on("-gGROUP", "--group=GROUP", "The unix group for chowning each file and directory") do |t|
+    permissions[:group] = t
+  end
+
+  opts.on("--dir-mode=DIRECTORY-MODE", Integer, "The unix mode for each extracted directory") do |t|
+    permissions[:directory_mode] = t
+  end
+
+  opts.on("--file-mode=FILE-MODE", Integer, "The unix mode for each extracted file") do |t|
+    permissions[:file_mode] = t
+  end
 end
 
 op.parse!
@@ -33,5 +50,14 @@ input   = Unthread::DirectoryReader.new(options.fetch(:source_directory), option
 dir     = options.fetch(:destination_directory)
 threads = options.fetch(:threads)
 
-Unthread::DirectoryCreator.run(input.directories, dir, threads: threads)
-Unthread::FileCreator.run(input.files, dir, threads: threads)
+created_dirs  = Unthread::DirectoryCreator.run(input.directories, dir, threads: threads)
+created_files = Unthread::FileCreator.run(input.files, dir, threads: threads)
+
+unless permissions.empty?
+  permissions[:threads] = threads
+  permissions[:mode] = permissions.delete(:directory_mode)
+  Unthread::Permission.set(created_dirs, permissions)
+
+  permissions[:mode] = permissions.delete(:file_mode)
+  Unthread::Permission.set(created_files, permissions)
+end

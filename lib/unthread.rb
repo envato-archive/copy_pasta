@@ -3,6 +3,7 @@ require "zlib"
 require "forwardable"
 
 require "unthread/version"
+require "unthread/permission"
 require "unthread/file_attribute"
 require "unthread/parent_directory"
 require "unthread/directory_reader"

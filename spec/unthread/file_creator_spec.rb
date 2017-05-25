@@ -20,7 +20,7 @@ describe Unthread::FileCreator do
     FileUtils.touch("/tmp/output/sub/dir/3.txt")
   end
 
-  describe "#queue" do
+  describe "#create_work" do
     it "queues the creation" do
       allow(described_instance.executor).to receive(:queue)
       described_instance.create_work
@@ -31,10 +31,17 @@ describe Unthread::FileCreator do
   end
 
   describe "#run" do
-    it "executes all work in the queue" do
+    before do
       allow(described_instance.executor).to receive(:run)
+    end
+
+    it "executes all work in the queue" do
       described_instance.run
       expect(described_instance.executor).to have_received(:run)
+    end
+
+    it "returns an array of created files" do
+      expect(described_instance.run).to include(*files.map(&:file_name))
     end
   end
 
