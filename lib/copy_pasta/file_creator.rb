@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Concurrently creates files.
   class FileCreator
     # Public: Creates files in the given output dir.
@@ -23,7 +23,7 @@ module Unthread
     def initialize(files, output_dir, threads)
       @files      = files
       @output_dir = output_dir
-      @executor   = Unthread::Executor.new(threads)
+      @executor   = CopyPasta::Executor.new(threads)
     end
 
     # Public: Adds all files to the queue to be created.

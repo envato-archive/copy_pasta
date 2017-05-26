@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Executes work across threads.
   class Executor
     # Public: Array of Concurrent::Promise to execute.

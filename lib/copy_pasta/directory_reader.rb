@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Reads files and directories from a given path.
   class DirectoryReader
     # Public: Creates an instance of DirectoryReader.

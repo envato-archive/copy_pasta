@@ -1,7 +1,7 @@
 require "bundler/setup"
 require "simplecov"
 SimpleCov.start
-require "unthread"
+require "copy_pasta"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
