@@ -34,8 +34,11 @@ module Unthread
     end
 
     # Public: Creates all files.
+    #
+    # Returns an array of files created
     def run
       executor.run
+      @files.map { |file| File.join(@output_dir, file.relative_file_name) }
     end
   end
 end

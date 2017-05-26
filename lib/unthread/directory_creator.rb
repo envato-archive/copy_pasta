@@ -36,8 +36,11 @@ module Unthread
     end
 
     # Public: Creates all directories.
+    #
+    # Returns an Array of directories created
     def run
       executor.run
+      @directories.map { |dir| File.join(@output_dir, dir.relative_file_name) }
     end
 
     private
