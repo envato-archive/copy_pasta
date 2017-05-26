@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Unthread::FileAttribute do
+describe CopyPasta::FileAttribute do
   let(:described_instance) { described_class.new("/tmp/file.txt", "/tmp") }
   let(:stat_double) { instance_double(File::Stat) }
 

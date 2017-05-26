@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Reads the file attributes for a given file.
   class FileAttribute
     extend Forwardable

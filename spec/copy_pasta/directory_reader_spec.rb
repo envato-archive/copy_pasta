@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Unthread::DirectoryReader do
+describe CopyPasta::DirectoryReader do
   let(:example_dir_structure) { "/tmp/example_dir_structure" }
   let(:described_instance) { described_class.new(example_dir_structure) }
 

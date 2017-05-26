@@ -2,11 +2,11 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "unthread/version"
+require "copy_pasta/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "unthread"
-  spec.version       = Unthread::VERSION
+  spec.name          = "copy_pasta"
+  spec.version       = CopyPasta::VERSION
   spec.authors       = ["Justin Mazzi"]
   spec.email         = ["justin@pressed.net"]
 

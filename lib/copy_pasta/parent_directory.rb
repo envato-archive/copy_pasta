@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Detects the parent paths of a given directory
   class ParentDirectory
     # Public: Find all the parent directories of a given path

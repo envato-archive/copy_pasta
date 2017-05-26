@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Unthread::Permission do
+describe CopyPasta::Permission do
   let(:files) { ["/tmp/1.txt", "/tmp/2.txt"] }
   let(:described_instance) { described_class.new(files, {}) }
 
@@ -77,9 +77,9 @@ describe Unthread::Permission do
     end
 
     it "uses the number of threads specificed" do
-      allow(Unthread::Executor).to receive(:new).with(10)
+      allow(CopyPasta::Executor).to receive(:new).with(10)
       described_class.new(files, threads: 10)
-      expect(Unthread::Executor).to have_received(:new).with(10)
+      expect(CopyPasta::Executor).to have_received(:new).with(10)
     end
   end
 end

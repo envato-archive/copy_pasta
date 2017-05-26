@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require "unthread"
+require "copy_pasta"
 require "optparse"
 
 options     = { threads: 100 }
@@ -46,18 +46,18 @@ op.parse!
 
 abort op.banner if options[:source_directory].nil? || options[:destination_directory].nil?
 
-input   = Unthread::DirectoryReader.new(options.fetch(:source_directory), options[:pattern])
+input   = CopyPasta::DirectoryReader.new(options.fetch(:source_directory), options[:pattern])
 dir     = options.fetch(:destination_directory)
 threads = options.fetch(:threads)
 
-created_dirs  = Unthread::DirectoryCreator.run(input.directories, dir, threads: threads)
-created_files = Unthread::FileCreator.run(input.files, dir, threads: threads)
+created_dirs  = CopyPasta::DirectoryCreator.run(input.directories, dir, threads: threads)
+created_files = CopyPasta::FileCreator.run(input.files, dir, threads: threads)
 
 unless permissions.empty?
   permissions[:threads] = threads
   permissions[:mode] = permissions.delete(:directory_mode)
-  Unthread::Permission.set(created_dirs, permissions)
+  CopyPasta::Permission.set(created_dirs, permissions)
 
   permissions[:mode] = permissions.delete(:file_mode)
-  Unthread::Permission.set(created_files, permissions)
+  CopyPasta::Permission.set(created_files, permissions)
 end

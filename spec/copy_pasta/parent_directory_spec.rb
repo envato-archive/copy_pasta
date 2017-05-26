@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Unthread::ParentDirectory do
+describe CopyPasta::ParentDirectory do
   subject { described_class.find(path) }
 
   let(:resolved_paths) do

@@ -1,13 +1,13 @@
 require "spec_helper"
 
-describe Unthread::DirectoryCreator do
+describe CopyPasta::DirectoryCreator do
   context "Executor" do
     before do
       allow(file_attribute).to receive(:size).and_return(0)
       allow(file_attribute).to receive(:relative_file_name).and_return("file")
     end
 
-    let(:file_attribute) { instance_double(Unthread::FileAttribute) }
+    let(:file_attribute) { instance_double(CopyPasta::FileAttribute) }
 
     let(:described_instance) do
       described_class.new([file_attribute, file_attribute], "/tmp/output", 1)
@@ -36,7 +36,7 @@ describe Unthread::DirectoryCreator do
     describe "#self.run" do
       let(:scratch_source) { "/tmp/output" }
       let(:scratch_destination) { "/tmp/output2" }
-      let(:directory_reader) { Unthread::DirectoryReader.new(scratch_source) }
+      let(:directory_reader) { CopyPasta::DirectoryReader.new(scratch_source) }
 
       let(:source_directories) do
         ["/tmp/output/dir", "/tmp/output/dir/sub"]

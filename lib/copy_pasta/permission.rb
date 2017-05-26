@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Sets permissions for the given files and directories.
   class Permission
     def self.set(files, options = {})
@@ -16,7 +16,7 @@ module Unthread
     def initialize(files, options = {})
       @files    = files
       @options  = options
-      @executor = Unthread::Executor.new(options.fetch(:threads, 100))
+      @executor = CopyPasta::Executor.new(options.fetch(:threads, 100))
     end
 
     # Public: Adds all files and directories to the queue for permission changes.

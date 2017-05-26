@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Unthread::Executor do
+describe CopyPasta::Executor do
   let(:described_instance) { described_class.new(1) }
 
   describe "#queue" do

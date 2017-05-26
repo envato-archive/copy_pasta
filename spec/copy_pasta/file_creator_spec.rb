@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe Unthread::FileCreator do
-  let(:files) { Unthread::DirectoryReader.new(source_directory).files }
+describe CopyPasta::FileCreator do
+  let(:files) { CopyPasta::DirectoryReader.new(source_directory).files }
   let(:described_instance) { described_class.new(files, source_directory, 1) }
   let(:source_directory) { "/tmp/output" }
   let(:destination_directory) { "/tmp/output2" }
@@ -47,7 +47,7 @@ describe Unthread::FileCreator do
 
   describe "#self.run" do
     let(:path) { "/tmp/output2" }
-    let(:dir_reader) { Unthread::DirectoryReader.new(destination_directory) }
+    let(:dir_reader) { CopyPasta::DirectoryReader.new(destination_directory) }
     let(:created_files) { dir_reader.files.map(&:file_name) }
 
     before { described_class.run(files, path, threads: 1) }

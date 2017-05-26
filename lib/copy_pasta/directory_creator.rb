@@ -1,4 +1,4 @@
-module Unthread
+module CopyPasta
   # Public: Concurrently creates directories.
   class DirectoryCreator
     # Public: Creates directories in the given output dir.
@@ -25,7 +25,7 @@ module Unthread
       @directories = directories
       @output_dir  = output_dir
       @created     = Concurrent::Array.new
-      @executor    = Unthread::Executor.new(threads)
+      @executor    = CopyPasta::Executor.new(threads)
     end
 
     # Public: Adds all directories to the queue to be created.
@@ -54,7 +54,7 @@ module Unthread
       dir_name = dir.file_name
       return if @created.include?(dir_name)
       dir.create_directory(@output_dir)
-      @created.concat Unthread::ParentDirectory.find(dir_name)
+      @created.concat CopyPasta::ParentDirectory.find(dir_name)
     end
   end
 end
